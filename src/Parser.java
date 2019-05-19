@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * parseProgram and all the rest of the parser.
  */
 public class Parser {
-	private static List<StmtNode> statements = new ArrayList<>();
+	//private static List<StmtNode> statements;
 
 	/**
 	 * Top level parse method, called by the World
@@ -89,77 +89,10 @@ public class Parser {
 	 * PROG ::= STMT+
 	 */
 	static RobotProgramNode parseProgram(Scanner s) {
-
-		if(!s.hasNext()){
-			Parser.fail("Nothing to read", s);
-		}
-		while(s.hasNext()){
-			String token = s.next();
-			if(token.equals("loop")){
-				require(OPENBRACE, "needs open brace", s);
-				parseLOOP(s);
-			}
-			else {
-				statements.add(parseACT(token));
-			}
-		}
-
-		return new ProgNode(statements);
-
+		return new ProgNode(s);
 	}
 
 
-
-	static void parseLOOP(Scanner s) {
-		List<StmtNode> block = new ArrayList<>();
-		require(OPENBRACE, "needs open brace", s);
-		while (!s.hasNext("}")) {
-			String token = s.next();
-			block.add(parseSTMT(s));
-		}
-		parseBLOCK(block);
-	}
-
-	//You have made a block list of statements, you need to add these statement
-	// to the original list of statements in program parser.
-
-
-
-	static void parseBLOCK(List<StmtNode> block){
-		statements.addAll(block);
-	}
-
-	static StmtNode parseSTMT(Scanner s) {
-		String token = s.next();
-
-		if (token.equals("loop")) {
-			parseLOOP(s);
-		}
-		return parseACT(token);
-	}
-
-	static ActNode parseACT(String s){
-		switch (s) {
-			case "turnL;":
-				ActNode turnLeft = new ActNode("turnL;");
-				return turnLeft;
-			case "turnR;":
-				ActNode turnRight = new ActNode("turnR;");
-				return turnRight;
-			case "move;":
-				ActNode move = new ActNode("move;");
-				return move;
-			case "takeFuel;":
-				ActNode takeFuel = new ActNode("takeFuel");
-				return takeFuel;
-			case "wait;":
-				ActNode wait = new ActNode("wait;");
-				return wait;
-		}
-		return null;
-
-		//you have a statement, what statement is it, make a new act node and add it to a list of statements
-	}
 	// utility methods for the parser
 
 	/**

@@ -1,28 +1,41 @@
-public class ActNode extends StmtNode implements RobotProgramNode {
+import java.util.Scanner;
+
+public class ActNode implements RobotProgramNode {
     String action;
 
-    ActNode(String s){
-        super(s);
+    ActNode(Scanner s){
+        if(s.hasNext("turnL") || s.hasNext("turnR") || s.hasNext("move") || s.hasNext("takeFuel") || s.hasNext("wait")){
+            action = s.next();
+            if (s.hasNext(";")){
+                s.next(); //clear semi colon
+            }else{
+                Parser.fail("no trailing semicolon",s);
+            }
+        } else {
+            Parser.fail("action required",s);
+//            System.out.println("no nomas acciones senor");
+
+        }
     }
 
     @Override
     public void execute(Robot robot){
         switch(action){
-            case "turnL;" :
+            case "turnL" :
                 robot.turnLeft();
-                break;
-            case "turnR;" :
+
+            case "turnR" :
                 robot.turnRight();
-                break;
-            case "move;" :
+
+            case "move" :
                 robot.move();
-                break;
-            case "takeFuel;" :
+
+            case "takeFuel" :
                 robot.takeFuel();
-                break;
-            case "wait;" :
+
+            case "wait" :
                 robot.idleWait();
-                break;
+
         }
     }
 
